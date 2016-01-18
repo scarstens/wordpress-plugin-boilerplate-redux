@@ -1,0 +1,5 @@
+#block IDE files
+.idea/*
+#block data files
+*.sql
+*.zip
