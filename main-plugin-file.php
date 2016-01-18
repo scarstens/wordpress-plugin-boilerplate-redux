@@ -118,6 +118,11 @@ if ( ! class_exists( 'Main_Plugin' ) ) {
 //				$plugin_options_section_2->add_part($genTag = new sm_checkbox('page_meta_generator', array('label'=>'Include Generator Meta Tag', 'value'=>'true', 'classes'=>array('onOffSwitch') )));
 //			}
 
+			/*
+			 * TODO create you plugins functionality in includes folder by creating you custom classes
+			 * Implementation examples are below
+			 */
+
 			// example of how you load a class you build in `includes/My_Class.class.php`
 			if ( class_exists( 'My_Class' ) ) {
 				$this->modules->FS_VIP_Shortcodes = new My_Class( $this );
@@ -127,6 +132,8 @@ if ( ! class_exists( 'Main_Plugin' ) ) {
 			if ( class_exists( 'Kses_Custom_Tag_Allowances' ) ) {
 				$this->modules->Kses_Custom_Tag_Allowances = new Kses_Custom_Tag_Allowances( $this );
 			}
+
+
 
 			do_action( get_called_class() . '_after_init' );
 		}
