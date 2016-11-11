@@ -6,7 +6,7 @@
  * Plugin URI:
  * Description:
  * Author:
- * Version: 0.1.1
+ * Version: 0.1.2
  * Author URI:
  * License: GPL V2
  * Text Domain:
@@ -38,6 +38,7 @@ if ( ! class_exists( 'Main_Plugin' ) ) {
 		public $network;
 		public $current_blog_globals;
 		public $detect;
+		public $autoload_dir = '/includes/';
 
 		/**
 		 * Construct the plugin object
@@ -49,18 +50,6 @@ if ( ! class_exists( 'Main_Plugin' ) ) {
 			// hook can be used by mu plugins to modify plugin behavior after plugin is setup
 			do_action( get_called_class() . '_preface', $this );
 
-			//simplify getting site options with custom prefix with multisite compatibility
-			if ( ! function_exists( 'get_custom_option' ) ) {
-				// builds  the function in global scope
-				function get_custom_option( $s = '', $network_option = false ) {
-					if ( $network_option ) {
-						return get_site_option( SITEOPTION_PREFIX . $s );
-					} else {
-						return get_option( SITEOPTION_PREFIX . $s );
-					}
-				}
-			}
-
 			// Always load libraries first
 			$this->load_libary();
 
@@ -69,9 +58,9 @@ if ( ! class_exists( 'Main_Plugin' ) ) {
 
 			// define globals used by the plugin including bloginfo
 			$this->defines_and_globals();
-
-			// Load /includes/ folder php files
-			$this->load_classes();
+			
+			// Register autoloading to include any files in the $autoload_dir
+			spl_autoload_register( array( $this, 'autoload' ) );
 
 			// initialize
 			add_action( 'init', array( $this, 'init' ) );
@@ -293,7 +282,45 @@ if ( ! class_exists( 'Main_Plugin' ) ) {
 				}
 			}
 		} // end remove_action_by_class
-
+		
+		/**
+		 * Take a class name and turn it into a file name.
+		 *
+		 * @param  string $class
+		 * @return string
+		 */
+		private function get_file_name_from_class( $class ) {
+			
+			return 'class-' . str_replace( '_', '-', $class ) . '.php';
+		}
+		
+		/**
+		 * Include a class file.
+		 *
+		 * @param  string $path
+		 * @return bool successful or not
+		 */
+		private function load_file( $path ) {
+			if ( $path && is_readable( $path ) ) {
+				include_once( $path );
+				return true;
+			}
+			
+			return false;
+		}
+		
+		/**
+		 * Auto-load classes on demand to reduce memory consumption.
+		 *
+		 * @param string $class
+		 * @extra Special thanks to @mlteal for introducing concept for inception
+		 */
+		public function autoload( $class ) {
+			$class = strtolower( $class );
+			$file  = $this->get_file_name_from_class( $class );
+			$this->load_file( $this->installed_dir . $this->autoload_dir . $file );
+		}
+		
 	} // END class
 } // END if(!class_exists())
 
