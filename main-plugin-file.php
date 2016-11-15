@@ -236,8 +236,6 @@ if ( ! class_exists( 'Main_Plugin' ) ) {
 
 		protected function configure_defaults() {
 			// Setup plugins global params
-			// TODO: customize with your plugins custom prefix (usually matches your text domain)
-			define( 'SITEOPTION_PREFIX', 'my_plugin_option_' );
 			$this->modules        = new stdClass();
 			$this->modules->count = 0;
 			$this->installed_dir  = dirname( __FILE__ );
