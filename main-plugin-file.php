@@ -50,9 +50,6 @@ if ( ! class_exists( 'Main_Plugin' ) ) {
 			// hook can be used by mu plugins to modify plugin behavior after plugin is setup
 			do_action( get_called_class() . '_preface', $this );
 
-			// Always load libraries first
-			$this->load_libary();
-
 			// configure and setup the plugin class variables
 			$this->configure_defaults();
 
