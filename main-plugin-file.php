@@ -6,7 +6,7 @@
  * Plugin URI:
  * Description:
  * Author:
- * Version: 0.1.2
+ * Version: 0.1.4
  * Author URI:
  * License: GPL V2
  * Text Domain:
@@ -61,6 +61,11 @@ if ( ! class_exists( 'Main_Plugin' ) ) {
 			
 			// Register autoloading to include any files in the $autoload_dir
 			spl_autoload_register( array( $this, 'autoload' ) );
+			
+			// Enable any composer libraries if they exist
+			if( file_exists( $this->installed_dir . 'vendor/autoload.php' ) ) {
+				include_once $this->installed_dir . 'vendor/autoload.php';
+			}
 
 			// initialize
 			add_action( 'init', array( $this, 'init' ) );
@@ -113,16 +118,9 @@ if ( ! class_exists( 'Main_Plugin' ) ) {
 			 */
 
 			// example of how you load a class you build in `includes/My_Class.class.php`
-			if ( class_exists( 'My_Class' ) ) {
-				$this->modules->FS_VIP_Shortcodes = new My_Class( $this );
-			}
-
-			// Example of creating custom KSES to enable custom script allowances in tinyMCE
-			if ( class_exists( 'Kses_Custom_Tag_Allowances' ) ) {
-				$this->modules->Kses_Custom_Tag_Allowances = new Kses_Custom_Tag_Allowances( $this );
-			}
-
-
+//			if ( class_exists( 'My_Class' ) ) {
+//				$this->modules->FS_VIP_Shortcodes = new My_Class( $this );
+//			}
 
 			do_action( get_called_class() . '_after_init' );
 		}
@@ -174,36 +172,13 @@ if ( ! class_exists( 'Main_Plugin' ) ) {
 			 */
 
 		} // END public static function deactivate
-
+		
 		/**
-		 * Loads PHP files in the includes folder
-		 * @TODO: Move to using spl_autoload_register
+		 * Defines 
 		 *
 		 * @since   0.1
 		 * @return  void
 		 */
-		protected function load_classes() {
-			// load all files with the pattern *.class.php from the includes directory
-			foreach ( glob( dirname( __FILE__ ) . '/includes/*.class.php' ) as $class ) {
-				require_once $class;
-				$this->modules->count ++;
-			}
-		}
-
-		/**
-		 * Load all files from /lib/ that match extensions like filename.class.php
-		 * @TODO: Move to using spl_autoload_register
-		 *
-		 * @since   0.1
-		 * @return  void
-		 */
-		protected function load_libary() {
-			// load all files with the pattern *.php from the directory inc
-			foreach ( glob( dirname( __FILE__ ) . '/lib/*.class.php' ) as $class ) {
-				require_once $class;
-			}
-		}
-
 		protected function defines_and_globals() {
 			/*
 			 * Uncomment parts of this section to enable these features
