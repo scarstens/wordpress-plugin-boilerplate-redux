@@ -1,3 +1,7 @@
+# NOTE: BOILER PLATE DEPRECATED 
+Please see the new composer based abstract plugin base for proper standized plugin development.
+https://github.com/WordPress-Phoenix/abstract-plugin-base
+
 # WordPress Plugin Boiler Plate Redux
 A boiler plate intended to serve the starting point of simpler plugins.
 
